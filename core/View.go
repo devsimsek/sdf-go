@@ -14,16 +14,16 @@ import (
 func LoadView(view string, data ...interface{}) string {
 	// Open view file
 	var viewText, err = os.ReadFile(view)
-	CheckError(err)
+	CheckErrorNotPanic(err)
 	parse, err := template.New(view).Parse(string(viewText))
-	CheckError(err)
+	CheckErrorNotPanic(err)
 	buf := &bytes.Buffer{}
 	var i = 0
 	var parsed = false
 	for _, dataToParse := range data {
 		if i < 1 {
 			err = parse.Execute(buf, dataToParse)
-			CheckError(err)
+			CheckErrorNotPanic(err)
 			parsed = true
 			break
 		}
@@ -31,7 +31,7 @@ func LoadView(view string, data ...interface{}) string {
 	}
 	if !parsed {
 		err = parse.Execute(buf, data)
-		CheckError(err)
+		CheckErrorNotPanic(err)
 		parsed = true
 	}
 	s := buf.String()
