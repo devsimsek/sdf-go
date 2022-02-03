@@ -25,6 +25,14 @@ func RegisterHandle(path string, handler func(http.ResponseWriter, *http.Request
 	}
 }
 
+// RegisterStandaloneHandle Register standalone handle.
+func RegisterStandaloneHandle(path string, handler func(http.ResponseWriter, *http.Request)) {
+	http.HandleFunc(path, func(writer http.ResponseWriter, request *http.Request) {
+		Console(request.Method+" request from "+request.RemoteAddr+" to "+request.RequestURI, "Request")
+		handler(writer, request)
+	})
+}
+
 // RegisterStaticHandle creates new static server on path
 func RegisterStaticHandle(path string, localPath string) {
 	if FileExists(localPath) {
