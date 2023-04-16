@@ -124,12 +124,12 @@ This is an example of how to prepare your application to use the sdf and how to 
           "fmt"
           "net/http"
       )
-      
+
       func init() {
            core.RegisterHandle("/", homeHandler, "GET")
 	     }
-   
-      func homeHandler(w http.ResponseWriter, r *http.Request) { 
+
+      func homeHandler(w http.ResponseWriter, r *http.Request) {
            // Load View
 		         _, err := fmt.Fprintf(w, core.LoadView("views/home.html", core.PageData{
 		             PageTitle: "Home",
@@ -149,7 +149,7 @@ This is an example of how to prepare your application to use the sdf and how to 
 
 Just open handlers directory and create a new handler :) You should be good to go :)
 
-_For more examples, please refer to the [Documentation](https://gihtub.com/devsimsek/sdf-go/wiki)_
+_For more examples, please refer to the [Documentation](https://github.com/devsimsek/sdf-go/wiki)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
