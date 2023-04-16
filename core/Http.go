@@ -4,11 +4,16 @@ import (
 	"errors"
 	"net/http"
 	"reflect"
+	"regexp"
 	"runtime"
+	"strings"
 )
 
 /**
  * Http Library
+ * Copyright (C)devsimsek
+ * This file contains functions for routing purposes
+ * and answering client requests.
  */
 
 var handles = map[interface{}]interface{}{}
@@ -45,25 +50,37 @@ func RegisterStaticHandle(path string, localPath string) {
 }
 
 func router() {
-	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		Console(request.Method+" request from "+request.RemoteAddr+" to "+request.RequestURI, "Request")
-		clientReq := handles["/"+request.URL.Path[1:]+"_"+request.Method]
-		if clientReq != nil {
-			if clientReq.(RegHandler).Method == request.Method {
-				clientReq.(RegHandler).Function(writer, request)
-			} else {
-				http.Error(writer, "Invalid request method.", 405)
-			}
-		} else {
-			http.Error(writer, "Path not found.", 404)
-		}
-	})
+  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    Console(r.Method + " request from " + r.RemoteAddr + " to " + r.RequestURI, "Router")
+    pathFound := false
+    for _, v := range handles {
+      match := strings.Replace(v.(RegHandler).Path, "{url}", "([0-9a-zA-Z]+)", -1)
+      match = strings.Replace(v.(RegHandler).Path, "{id}", "([0-9]+)", -1)
+      match = strings.Replace(v.(RegHandler).Path, "{all}", "(.*)", -1)
+      p := regexp.MustCompile(match)
+      matches := p.FindAllString("/" + r.URL.Path[1:], -1)
+      if (len(matches)>0) && strings.Join(matches, "") != "/" && strings.Join(matches, "") != "" {
+        v.(RegHandler).Function(w, r)
+        pathFound = true
+        break
+      } else {
+        if r.URL.Path[1:] == v.(RegHandler).Path {
+          v.(RegHandler).Function(w, r)
+          pathFound = true
+          break
+        }
+      }
+    }
+    if !pathFound {
+      http.Error(w, "Path not found.", 404)
+    }
+  })
 }
 
 func Serve(port string) {
 	Console("Starting serving routes...", "Router")
 	router()
-	Console("Serving application in "+port, "Info")
-	server := http.ListenAndServe(":"+port, nil)
+	Console("Serving application in " + port, "Info")
+	server := http.ListenAndServe(":" + port, nil)
 	CheckForFatal(server)
 }

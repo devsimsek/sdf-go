@@ -19,3 +19,4 @@ func main() {
 	// core.RegisterStaticHandle("/assets/", "assets") Uncomment here if you have static files
 	core.Serve("8000")
 }
+

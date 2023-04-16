@@ -3,10 +3,12 @@ package core
 import (
 	"errors"
 	"fmt"
-	"github.com/gorilla/sessions"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
+  "strings"
+	"github.com/gorilla/sessions"
 )
 
 func Console(message ...string) {
@@ -22,7 +24,7 @@ func Console(message ...string) {
 
 func CheckForFatal(err ...interface{}) {
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err...)
 	}
 }
 
@@ -56,6 +58,11 @@ func ExpectResult(expectation string, result interface{}) bool {
 }
 
 // String Parsing
+
+// Parse url
+func ParseUrl(r *http.Request) []string {
+  return strings.Split(r.URL.Path, "/")
+}
 
 // PosString get string position
 func PosString(slice []string, element string) int {
