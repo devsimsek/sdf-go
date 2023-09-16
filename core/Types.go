@@ -11,12 +11,6 @@ type PageData struct {
 	ViewData  map[string]interface{}
 }
 
-type UserData struct {
-	Username      string
-	AuthLevel     interface{}
-	Authenticated bool
-}
-
 type RegHandler struct {
 	Path     string
 	Method   string

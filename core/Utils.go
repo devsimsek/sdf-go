@@ -111,12 +111,17 @@ func FileExists(file string) bool {
 	}
 }
 
-func GetUser(session *sessions.Session) UserData {
-	val := session.Values["user"]
-	var user = UserData{}
-	user, ok := val.(UserData)
-	if !ok {
-		return UserData{Authenticated: false}
+// GetPostData returns string if the field exists in the post body
+func GetPostData(r *http.Request, field string) (string, error) {
+	err := r.ParseForm()
+	if err != nil {
+		return "", err
 	}
-	return user
+
+	value := r.Form.Get(field)
+	if value != "" {
+		return value, nil
+	}
+
+	return "", fmt.Errorf("field '%s' not found in the POST body", field)
 }
