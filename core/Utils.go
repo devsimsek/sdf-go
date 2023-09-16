@@ -8,7 +8,6 @@ import (
 	"os"
 	"path/filepath"
   "strings"
-	"github.com/gorilla/sessions"
 )
 
 func Console(message ...string) {
