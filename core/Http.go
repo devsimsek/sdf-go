@@ -60,10 +60,12 @@ func router() {
 			p := regexp.MustCompile(match)
 			matches := p.FindAllString("/"+r.URL.Path[1:], -1)
 			possibleMatch := handles[r.URL.Path+"_"+r.Method]
-			if possibleMatch.(RegHandler).Path != "" {
-				possibleMatch.(RegHandler).Function(w, r)
-				pathFound = true
-				break
+			if possibleMatch != nil {
+				if possibleMatch.(RegHandler).Path != "" {
+					possibleMatch.(RegHandler).Function(w, r)
+					pathFound = true
+					break
+				}
 			}
 			if (len(matches) > 0) && strings.Join(matches, "") != "/" && strings.Join(matches, "") != "" {
 				if r.Method == v.(RegHandler).Method {
