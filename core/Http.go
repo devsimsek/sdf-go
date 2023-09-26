@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 	"reflect"
-	"regexp"
 	"runtime"
 	"strings"
 )
@@ -49,40 +48,46 @@ func RegisterStaticHandle(path string, localPath string) {
 	}
 }
 
+func matchPath(path, routePath string) bool {
+	parts := strings.Split(routePath, "/")
+	pathParts := strings.Split(path, "/")
+	if path == routePath {
+		return true
+	}
+
+	if len(parts) != len(pathParts) {
+		return false
+	}
+
+	for i, part := range parts {
+		if part != pathParts[i] && !strings.HasPrefix(part, "{") {
+			return false
+		}
+	}
+
+	return true
+}
+
 func router() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		Console(r.Method+" request from "+r.RemoteAddr+" to "+r.RequestURI, "Router")
+		path := r.URL.Path[1:]
+		method := r.Method
 		pathFound := false
+
 		for _, v := range handles {
-			match := strings.Replace(v.(RegHandler).Path, "{url}", "([0-9a-zA-Z]+)", -1)
-			match = strings.Replace(v.(RegHandler).Path, "{id}", "([0-9]+)", -1)
-			match = strings.Replace(v.(RegHandler).Path, "{all}", "(.*)", -1)
-			p := regexp.MustCompile(match)
-			matches := p.FindAllString("/"+r.URL.Path[1:], -1)
-			possibleMatch := handles[r.URL.Path+"_"+r.Method]
-			if possibleMatch != nil {
-				if possibleMatch.(RegHandler).Path != "" {
-					possibleMatch.(RegHandler).Function(w, r)
-					pathFound = true
-					break
-				}
+			handler, ok := v.(RegHandler)
+			if !ok {
+				continue
 			}
-			if (len(matches) > 0) && strings.Join(matches, "") != "/" && strings.Join(matches, "") != "" {
-				if r.Method == v.(RegHandler).Method {
-					v.(RegHandler).Function(w, r)
-					pathFound = true
-					break
-				}
-			} else {
-				if r.URL.Path[1:] == v.(RegHandler).Path {
-					if r.Method == v.(RegHandler).Method {
-						v.(RegHandler).Function(w, r)
-						pathFound = true
-						break
-					}
-				}
+
+			if matchPath(path, handler.Path) && (method == handler.Method || handler.Method == "ANY") {
+				handler.Function(w, r)
+				pathFound = true
+				break
 			}
 		}
+
 		if !pathFound {
 			http.Error(w, "Path not found.", 404)
 		}

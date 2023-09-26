@@ -1,14 +1,117 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{.PageTitle}}</title>
-</head>
-<body>
-Welcome to my site!
-Powered by sdf-go
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{.PageTitle}} - SDF-Go Starter</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/devsimsek/light.css/light.min.css"
+    />
+    <style>
+      body {
+        font-family: "San Francisco", Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--dark-color);
+        margin: 0;
+        padding: 0;
+      }
+
+      .header {
+        background-color: var(--primary-color);
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      p {
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .get-started-button {
+        display: inline-block;
+        padding: 12px 24px;
+        font-size: 20px;
+        background-color: var(--secondary-color);
+        color: #fff;
+        border: none;
+        border-radius: var(--border-radius-medium);
+        text-decoration: none;
+        margin-top: 20px;
+      }
+
+      .get-started-button:hover {
+        color: var(--light-color);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Welcome to sdf-go</h1>
+      <p>A minimalistic golang framework to simplify web development</p>
+      <a href="https://sdfgo.smsk.me/docs" class="get-started-button"
+        >Get Started</a
+      >
+      <a
+        href="https://github.com/devsimsek/sdf-go/archive/refs/heads/main.zip"
+        class="get-started-button"
+      >Download Source</a>
+    </header>
+    <div class="container">
+      <section id="documentation">
+        <h2>Documentation</h2>
+        <p>
+          Learn how to use sdf-go to enhance/develop your web projects. Check out the project documentation for detailed information on classes, customization, and
+          more.
+        </p>
+        <a
+          href="https://srfgo.smsk.me/docs"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Read Documentation</a
+        >
+      </section>
+      <section>
+        <h2>Features</h2>
+        <ul>
+          <li>Minimalistic design</li>
+          <li>Built-in Libraries</li>
+          <li>Kind Of MVC Approach</li>
+          <li>Integrated, encrypted and fast database solution</li>
+          <li>And much more...</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Get Started</h2>
+        <p>
+          Ready to try sdf-go in your project? Get started by exploring the documentation.
+        </p>
+        <a
+          href="https://sdfgo.smsk.me/d/getting-started/prerequisites"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="get-started-button"
+          >Get Started</a
+        >
+      </section>
+    </div>
+    <footer class="fixed-bottom w-100">
+      <span
+        >Copyright (C)devsimsek.
+        <a href="https://devsimsek.mit-license.org">MIT License</a></span
+      >
+    </footer>
+  </body>
 </html>

@@ -7,9 +7,6 @@ import (
 )
 
 func init() {
-	core.RegisterHandle("p/{all}", func (w http.ResponseWriter, r *http.Request)  {
-    w.Write([]byte("You are viewing " + core.ParseUrl(r)[2] + " page."))
-	}, "GET")
 	core.RegisterHandle("home", homeHandler, "GET")
 	core.RegisterHandle("", homeHandler, "GET")
 }
