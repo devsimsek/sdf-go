@@ -4,8 +4,8 @@ import (
 	"SDF/core"
 	"encoding/base64"
 	"encoding/json"
-	"io/ioutil"
 	"os"
+  "io"
 	"path/filepath"
 )
 
@@ -15,9 +15,7 @@ type Database struct {
 	Contents map[string]interface{}
 }
 
-var tempDatabase Database
-
-func Open(fileName string, path ...string) bool {
+func (tempDatabase Database) Open(fileName string, path ...string) bool {
 	var dir string
 	if len(path) < 1 {
 		directory, err := os.Getwd()
@@ -35,7 +33,7 @@ func Open(fileName string, path ...string) bool {
 	tempDatabase.Dir = dir
 	tempDatabase.File = fileName
 	// Parse contents of database
-	contents, _ := ioutil.ReadAll(file)
+	contents, _ := io.ReadAll(file)
 	contents, err := base64.StdEncoding.DecodeString(string(contents))
 	err = json.Unmarshal(contents, &tempDatabase.Contents)
 	core.CheckError(err)
@@ -45,7 +43,7 @@ func Open(fileName string, path ...string) bool {
 	return false
 }
 
-func Save() bool {
+func (tempDatabase Database) Save() bool {
 	content, err := json.Marshal(tempDatabase.Contents)
 	core.CheckError(err)
 	content = []byte(base64.StdEncoding.EncodeToString(content))
@@ -54,23 +52,23 @@ func Save() bool {
 	return true
 }
 
-func Set(key string, value interface{}) {
+func (tempDatabase Database) Set(key string, value interface{}) {
 	tempDatabase.Contents[key] = value
 }
 
-func Get(key string) interface{} {
+func (tempDatabase Database) Get(key string) interface{} {
 	return tempDatabase.Contents[key]
 }
 
-func Update(key string, value interface{}) {
+func (tempDatabase Database) Update(key string, value interface{}) {
 	tempDatabase.Contents[key] = value
 }
 
-func Delete(key string) {
+func (tempDatabase Database) Delete(key string) {
 	delete(tempDatabase.Contents, key)
 }
 
-func Create(fileName string, path ...string) (*os.File, error) {
+func (tempDatabase Database) Create(fileName string, path ...string) (*os.File, error) {
 	var dir string
 	if len(path) < 1 {
 		directory, err := os.Getwd()
@@ -86,11 +84,9 @@ func Create(fileName string, path ...string) (*os.File, error) {
 	core.CheckError(err)
 	_, err = file.WriteString(base64.StdEncoding.EncodeToString([]byte("{}")))
 	core.CheckError(err)
-	// Open database
-	Open(fileName, dir)
 	return file, nil
 }
 
-func Read() map[string]interface{} {
+func (tempDatabase Database) Read() map[string]interface{} {
 	return tempDatabase.Contents
 }
